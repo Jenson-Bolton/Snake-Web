@@ -1,7 +1,6 @@
 // get Colours
 var mainColor = getComputedStyle(document.documentElement).getPropertyValue('--main-color');
 var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color');
-let appleColor = '#FFA7A5';
 
 // Initialize canvas
 var c = document.querySelector('canvas'); // change to get by ID, later
@@ -17,12 +16,8 @@ var center = {
     'y': parseInt((c.height/unit)/2)
 };
 
-class Head {
-    constructor() {
-        this.coords = center;
-        this.direction = 'up';
-        this.color = '#F1A5FF';
-    }
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 class Body {
@@ -35,15 +30,33 @@ class Body {
     }
 }
 
+class Head {
+    constructor() {
+        this.coords = center;
+        this.color = '#F1A5FF';
+    }
+}
+
 class Snake {
     constructor() {
-        this.length = 3;
         this.body = [new Head(), new Body(center.x, center.y+1), new Body(center.x, center.y+2)];
+        this.direction = 'down';
+        this.length = 3;
+    }
+
+    #clear() {        
+        for (let i = 0; i < this.length; i++) {
+            ctx.fillStyle = this.body[i].color;
+            ctx.clearRect(this.body[i].coords.x * unit,
+                this.body[i].coords.y * unit,
+                unit,
+                unit);
+        }
     }
 
     drawSnake() {
-        var i = 0;
-        for (i = 0; i < this.length; i++) {
+        this.#clear();
+        for (let i = 0; i < this.length; i++) {
             ctx.fillStyle = this.body[i].color;
             ctx.fillRect(this.body[i].coords.x * unit,
                 this.body[i].coords.y * unit,
@@ -52,25 +65,44 @@ class Snake {
         }
     }
 
+    isSnakeThere(x, y) {
+
+    }
+
     moveSnake() {
-        // this is wrong
-        // make each body part the same coord as the one before and head moves in a direction
-        // think about making direction apart of Snake not head
-        if (this.body[0].direction == 'up') {
-            for (i = 0; i < this.length; i++) {
-                this.body[i].coords.y = this.body[i].coords.y - 1
+        let tempCoord;
+        if (this.direction == 'up') {
+
+        }
+        else if (this.direction == 'down') {
+            for (let i = this.length-1; i >= 0; i = i-1) {
+                if (i == 0) {
+                    this.body[i].coords.y = this.body[i].coords.y+1;
+                }
+                else {
+                    this.body[i].coords = this.body[i-1].coords;
+                }
             }
         }
-        else if (this.body[0].direction == 'down') {
-            for (i = 0; i < this.length; i++) {
-                this.body[i].coords.y = this.body[i].coords.y + 1
+        else if (this.direction == 'left') {
+            for (let i = this.length-1; i >= 0; i = i-1) {
+                if (i == 0) {
+                    this.body[i].coords.x = this.body[i].coords.x-1;
+                }
+                else {
+                    this.body[i].coords = this.body[i-1].coords;
+                }
             }
         }
-        else if (this.body[0].direction == 'left') {
-            for (i = 0; i < this.length; i++) {
-                this.body[i].coords.x = this.body[i].coords.x - 1
-            }
-        }
+        else if (this.direction == 'right') {
+            for (let i = this.length-1; i >= 0; i = i-1) {
+                if (i == 0) {
+                    this.body[i].coords.x = this.body[i].coords.x+1;
+                }
+                else {
+                    this.body[i].coords = this.body[i-1].coords;
+                }
+            }}
     }
 
 }
@@ -81,8 +113,36 @@ class Apple {
             'x': x,
             'y': y
         };
+        this.color = '#FFA7A5';
+    }
+
+    #clear() {
+        ctx.fillStyle = this.color;
+        ctx.clearRect(this.coords.x * unit,
+            this.coords.y * unit,
+            unit,
+            unit);
+    }
+
+    drawApple(snake) {
+        this.#clear();
+        let newPos;
+        let positioned = false;
+        while (positioned == false) {
+            newPos = {
+                'x': randomIntFromInterval(0, 39),
+                'y': randomIntFromInterval(0, 19)
+            }
+            for (let i = 0; i < snake.length; i++) {
+                snake.body[i] = 
+            }
+        }
     }
 }
 
 var snek = new Snake();
-snek.drawSnake();
+var apple = new Apple();
+// console.log(snek.body);
+// snek.moveSnake()
+// console.log(snek.body);
+snek.drawSnake()
