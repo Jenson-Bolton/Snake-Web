@@ -159,7 +159,6 @@ class Snake {
         for (let i = 0; i < this.length; i++) {
             this.body[i].coords = newCoords[i];
         }
-        console.log(this.body);
     }
 }
 
@@ -214,7 +213,6 @@ function gameLoop(interval) {
     // Move snake
     setTimeout(function() {
         snake.moveSnake();
-        console.log("Snake moved");
     }, parseInt(interval / 4));
 
     // Change last direction
@@ -238,7 +236,6 @@ function gameLoop(interval) {
 
     setTimeout(function() {
         snake.drawSnake();
-        console.log("Snake drawn");
     }, parseInt(interval / 2));
 
 
@@ -258,7 +255,7 @@ var snake = new Snake();
 var apple = new Apple();
 
 // Set game tickrate
-let interval = 500;
+let interval = 250;
 
 // Initial drawn
 snake.drawSnake();
