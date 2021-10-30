@@ -48,7 +48,11 @@ class Snake {
         };
     }
 
-    #clear() {        
+    get head() {
+        return this.body[0].coords;
+    }
+
+    clear() {        
         for (let i = 0; i < this.length; i++) {
             ctx.clearRect(this.body[i].coords.x * unit,
                 this.body[i].coords.y * unit,
@@ -64,7 +68,7 @@ class Snake {
     }
 
     drawSnake() {
-        this.#clear();
+        this.clear();
         for (let i = 0; i < this.length; i++) {
             ctx.fillStyle = this.body[i].color;
             ctx.fillRect(this.body[i].coords.x * unit,
@@ -72,6 +76,20 @@ class Snake {
                 unit,
                 unit);
         }
+    }
+
+    grow() {
+        this.body.push(new Body(this.lastTailCoords.x, this.lastTailCoords.y));
+        this.length += 1;
+    }
+
+    headCollides() {
+        for (let i = 1; i < this.length; i++) {
+            if (snake.head.x == this.body[i].coords.x && snake.head.y == this.body[i].coords.y) {
+                return true;
+            }
+        }
+        return false;     
     }
 
     isSnakeThere(x, y) {
@@ -154,7 +172,7 @@ class Apple {
         this.color = '#FFA7A5';
     }
 
-    #clear() {
+    clear() {
         ctx.fillStyle = this.color;
         ctx.clearRect(this.coords.x * unit,
             this.coords.y * unit,
@@ -163,7 +181,6 @@ class Apple {
     }
 
     drawApple(snake) {
-        this.#clear();
         let newPos;
         while (true) {
             newPos = {
@@ -181,22 +198,98 @@ class Apple {
             unit,
             unit);
     }
+
+    isAppleThere(x, y) {
+        if (x == this.coords.x && y == this.coords.y) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 function gameLoop(interval) {
+
+    // Move snake
     setTimeout(function() {
         snake.moveSnake();
         console.log("Snake moved");
     }, parseInt(interval / 4));
+
+    // Check if snake collided with apple
+    if (apple.isAppleThere(snake.head.x, snake.head.y)) {
+        snake.grow();
+        apple.drawApple(snake);
+    }
+
+    // Check if snake collides with wall
+    if (snake.head.x < 0 || snake.head.y < 0 || snake.head.x >= (c.width/unit) || snake.head.y >= (c.height/unit)) {
+        reset();
+    }
+
+    //Check if snake collides with itself
+    if (snake.headCollides()) {
+        reset();
+    }
+
     setTimeout(function() {
         snake.drawSnake();
         console.log("Snake drawn");
     }, parseInt(interval / 2));
+
+
 }
 
+function reset() {
+    snake.clear();
+    snake = new Snake();
+    snake.drawSnake();
+    apple.clear();
+    apple = new Apple();
+    apple.drawApple(snake);
+}
+
+// Init objects
 var snake = new Snake();
 var apple = new Apple();
+
+// Set game pass
+let interval = 500;
+
+// Initial drawn
 snake.drawSnake();
+apple.drawApple(snake);
+
+// Start eventListener
+window.addEventListener("keydown", function(event) {
+    if (event.defaultPrevented) {
+      return;
+    }
+  
+    switch(event.code) {
+        case "KeyW":
+        case "ArrowUp":
+            snake.direction = 'up';
+            break;
+        case "KeyS":
+        case "ArrowDown":
+            snake.direction = 'down';
+            break;
+        case "KeyA":
+        case "ArrowLeft":
+            snake.direction = 'left';
+            break;
+        case "KeyD":
+        case "ArrowRight":
+            snake.direction = 'right';
+            break;
+    }
+
+    event.preventDefault();
+});
+
+// Start game loop
 setInterval(
-    () => gameLoop(2000),
-    2000);
+    () => gameLoop(interval),
+    interval);
