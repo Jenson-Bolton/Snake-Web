@@ -217,6 +217,9 @@ function gameLoop(interval) {
         console.log("Snake moved");
     }, parseInt(interval / 4));
 
+    // Change last direction
+    lastDirection = snake.direction;
+
     // Check if snake collided with apple
     if (apple.isAppleThere(snake.head.x, snake.head.y)) {
         snake.grow();
@@ -254,7 +257,7 @@ function reset() {
 var snake = new Snake();
 var apple = new Apple();
 
-// Set game pass
+// Set game tickrate
 let interval = 500;
 
 // Initial drawn
@@ -262,6 +265,7 @@ snake.drawSnake();
 apple.drawApple(snake);
 
 // Start eventListener
+var lastDirection = 'up';
 window.addEventListener("keydown", function(event) {
     if (event.defaultPrevented) {
       return;
@@ -270,19 +274,27 @@ window.addEventListener("keydown", function(event) {
     switch(event.code) {
         case "KeyW":
         case "ArrowUp":
-            snake.direction = 'up';
+            if (lastDirection != 'down') {
+                snake.direction = 'up';
+            }
             break;
         case "KeyS":
         case "ArrowDown":
-            snake.direction = 'down';
+            if (lastDirection != 'up') {
+                snake.direction = 'down';
+            }
             break;
         case "KeyA":
         case "ArrowLeft":
-            snake.direction = 'left';
+            if (lastDirection != 'right') {
+                snake.direction = 'left';
+            }
             break;
         case "KeyD":
         case "ArrowRight":
-            snake.direction = 'right';
+            if (lastDirection != 'left') {
+                snake.direction = 'right';
+            }
             break;
     }
 
