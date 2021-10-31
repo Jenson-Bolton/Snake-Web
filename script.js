@@ -261,7 +261,7 @@ let interval = 250;
 snake.drawSnake();
 apple.drawApple(snake);
 
-// Start eventListener
+// Start eventListener for keyboard
 var lastDirection = 'up';
 window.addEventListener("keydown", function(event) {
     if (event.defaultPrevented) {
@@ -297,6 +297,53 @@ window.addEventListener("keydown", function(event) {
 
     event.preventDefault();
 });
+
+// Add eventlistener for mobile
+let touchstartX = 0;
+let touchstartY = 0;
+let touchendX = 0;
+let touchendY = 0;
+
+c.addEventListener('touchstart', function(event) {
+    touchstartX = event.changedTouches[0].screenX;
+    touchstartY = event.changedTouches[0].screenY;
+}, false);
+
+c.addEventListener('touchend', function(event) {
+    touchendX = event.changedTouches[0].screenX;
+    touchendY = event.changedTouches[0].screenY;
+    handleGesture();
+}, false); 
+
+function handleGesture() {
+    if (touchendX <= touchstartX) {
+        if (lastDirection != 'right') {
+            snake.direction = 'left';
+        }
+    }
+    
+    if (touchendX >= touchstartX) {
+        if (lastDirection != 'left') {
+            snake.direction = 'right';
+        }
+    }
+    
+    if (touchendY <= touchstartY) {
+        if (lastDirection != 'down') {
+            snake.direction = 'up';
+        }
+    }
+    
+    if (touchendY >= touchstartY) {
+        if (lastDirection != 'up') {
+            snake.direction = 'down';
+        }
+    }
+    
+    /* if (touchendY === touchstartY) {
+        console.log('Tap');
+    } */
+}
 
 // Start game loop
 setInterval(
