@@ -9,6 +9,7 @@ body,
 html {
     background-color: var(--bg-color);
     margin: 0;
+    overscroll-behavior-y: contain;
     padding: 0;
 }
 
@@ -42,6 +43,10 @@ canvas {
         border: 10px solid var(--main-color);
         width: 400px;
         height: 200px;
+    }
+
+    .title {
+        font-size: 1.5rem;
     }
 }
 
