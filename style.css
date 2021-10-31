@@ -36,3 +36,19 @@ canvas {
 .center-h {
     margin: 0 auto;
 }
+
+@media only screen and (max-width: 630px) {
+    #canvas-container {
+        border: 10px solid var(--main-color);
+        width: 400px;
+        height: 200px;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    #canvas-container {
+        border: 5px solid var(--main-color);
+        width: 200px;
+        height: 100px;
+    }
+}
